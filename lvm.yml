@@ -11,22 +11,23 @@
        community.general.lvol:
          vg: research
          lv: data
-         size: 900m
+         size: 1500m
+       register: lv_create
+       ignore_errors: yes
 
-     - name: when required size is not present
+     - name: show error when 1500m fails
        debug:
-         msg: required size is not present
-       when: ansible_lvm.vgs.research.free_g>="1.6"
+         msg: "Could not create logical volume of 1500m"
+       when: lv_create is failed
 
-     - name: if not present
+     - name: create lv 800m fallback
        lvol:
          vg: research
          lv: data
-         size: 512m
-       when: ansible_lvm.vgs.research.free_g<="1.6"
+         size: 800m
+       when: lv_create is failed
 
      - name: Create a ext4 filesystem on /dev/vdb and check disk blocks
        community.general.filesystem:
          fstype: ext4
-         dev: /dev/vdb
-         force: yes
+         dev: /dev/research/data

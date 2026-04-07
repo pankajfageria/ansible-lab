@@ -1,0 +1,31 @@
+---
+ - name: install latest version of apache
+   ansible.builtin.dnf:
+     name:
+       - httpd
+     state: latest
+
+ - name: Start service httpd, if not started
+   ansible.builtin.service:
+     name: httpd
+     state: started
+     enabled: yes
+
+ - name: Start service firewalld, if not started
+   ansible.builtin.service:
+     name: firewalld
+     state: restarted
+     enabled: yes
+
+ - name: add http service in firewall rule
+   ansible.builtin.firewalld:
+     service: http
+     state: enabled
+     permanent: yes
+     immediate: yes
+
+ - name: Template a file j2
+   ansible.builtin.template:
+     src: template.j2
+     dest: /var/www/html/index.html
+

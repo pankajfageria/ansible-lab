@@ -1,0 +1,25 @@
+---
+ - name: create hwreport
+   hosts: all
+   tasks: 
+     - name: copy from folder
+       copy:
+         src: /root/hwreport.empty
+         dest: /root/hwreport.empty
+
+     - name: use replace module
+       replace:
+         path: /root/hwreport.txt
+         regexp: "{{ item.oldvalue }}"
+         replace: "{{ item.newvalue }}"
+       loop:
+         - oldvalue: hostname
+           newvalue: "{{ ansible_hostname | default('NONE') }}"
+         - oldvalue: biosversion
+           newvalue: "{{ ansible_bios_version | default('NONE') }}"
+         - oldvalue: memory
+           newvalue: "{{ ansible_memtotal_mb | default('NONE') }}"
+         - oldvalue: vdasize
+           newvalue: "{{ ansible_devices.vda.size | default('NONE') }}"
+         - oldvalue: vdbsize
+           newvalue: "{{ ansible_devices.vdb.size | default('NONE') }}"

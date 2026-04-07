@@ -1,0 +1,26 @@
+---
+ - name: package installation
+   hosts: dev, test, prod
+   tasks:
+     - name: Install a list of packages
+       ansible.builtin.yum:
+         name:
+           - php
+           - mariadb-server
+         state: present
+
+ - name: group package install
+   hosts: prod
+   tasks:
+     - name: installing group package 'Devlopment tools'
+       ansible.builtin.yum:
+         name: '@RPM Development Tools'
+         state: present
+
+ - name: update package
+   hosts: dev
+   tasks:
+     - name: updating all
+       ansible.builtin.yum:
+         name: '*'
+         state: latest

@@ -1,0 +1,33 @@
+---
+- name: Generate hardware report on all nodes
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Get BIOS version
+      command: dmidecode -s bios-version
+      register: bios_version
+      changed_when: false
+
+    - name: Get disk size vda
+      command: lsblk -b -dn -o SIZE /dev/vda
+      register: disk_vda
+      failed_when: false
+      changed_when: false
+
+    - name: Get disk size vdb
+      command: lsblk -b -dn -o SIZE /dev/vdb
+      register: disk_vdb
+      failed_when: false
+      changed_when: false
+
+    - name: Create hardware report file
+      copy:
+        dest: /root/hwreport.txt
+        content: |
+          Hostname: {{ ansible_hostname }}
+          Memory (MB): {{ ansible_memtotal_mb }}
+          CPU Cores: {{ ansible_processor_vcpus }}
+          BIOS Version: {{ bios_version.stdout }}
+          Disk vda Size (bytes): {{ disk_vda.stdout | default('Not Present') }}
+          Disk vdb Size (bytes): {{ disk_vdb.stdout | default('Not Present') }}

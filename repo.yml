@@ -1,0 +1,19 @@
+---
+ - name: configure repo
+   hosts: all
+   tasks:
+     - name: Add BaseOS
+       ansible.builtin.yum_repository:
+         name: BaseOS
+         description: BaseOS repository
+         file: basos 
+         baseurl: https://repo.almalinux.org/almalinux/9/BaseOS/x86_64/os
+         gpgcheck: no
+     
+     - name: Add AppStream
+       ansible.builtin.yum_repository:
+         name: BaseOS
+         description: AppStream repository
+         file: appstrean
+         baseurl: https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os
+         gpgcheck: no

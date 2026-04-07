@@ -1,0 +1,38 @@
+---
+ - name: running 
+   hosts: dev,test
+   vars_files:
+     - user_list.yml
+     - vault.yml
+   tasks:
+     - name: Add group
+       group:
+         name: opsdev
+         state: present
+
+     - name: adding users
+       user:
+         name: "{{ item.name }}"
+         groups: opsdev
+         password: "{{ pw_developer | password_hash('sha512') }}"
+       when: item.job == 'developer'
+       loop: "{{ users }}"
+
+ - name: cteate an users and group
+   hosts: prod
+   vars_files:
+     - user_list.yml
+     - vault.yml
+   tasks:
+     - name: add group
+       group:
+         name: opsmgr
+         state: present
+
+     - name: adding users
+       user:
+         name: "{{ item.name }}"
+         groups: opsmgr
+         password: "{{ pw_developer | password_hash('sha512') }}"
+       when: item.job == 'manager'
+       loop: "{{ users }}"

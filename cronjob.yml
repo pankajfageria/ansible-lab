@@ -1,0 +1,11 @@
+---
+ - name: creat cron job
+   hosts: all
+   tasks:
+     - name: use cromjob
+       ansible.builtin.cron:
+         name: "test"
+         minute: "*/2"
+         user: root
+         job: logger "RH224 in progress"
+         state: present

@@ -1,0 +1,32 @@
+---
+ - name: create lvm
+   hosts: all
+   tasks:
+     - name: Print the gateway for each host when defined
+       debug:
+         msg: device not present
+       when: ansible_lvm.vgs.research is not defined
+
+     - name: Create a logical volume of 512m
+       community.general.lvol:
+         vg: research
+         lv: data
+         size: 900m
+
+     - name: when required size is not present
+       debug:
+         msg: required size is not present
+       when: ansible_lvm.vgs.research.free_g>="1.6"
+
+     - name: if not present
+       lvol:
+         vg: research
+         lv: data
+         size: 512m
+       when: ansible_lvm.vgs.research.free_g<="1.6"
+
+     - name: Create a ext4 filesystem on /dev/vdb and check disk blocks
+       community.general.filesystem:
+         fstype: ext4
+         dev: /dev/vdb
+         force: yes

@@ -1,0 +1,6 @@
+---
+ - src: http://localhost/files/balancer.tgz
+   dest: balancer
+
+ - src: http://localhost/files/phpinfo.tgz
+   dest: phpinfo

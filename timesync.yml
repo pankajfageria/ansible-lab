@@ -1,0 +1,8 @@
+---
+ - hosts: all
+   vars:
+    timesync_ntp_servers:
+      - hostname: marlo.ludost.net
+        iburst: yes
+   roles:
+    - redhat.rhel_system_roles.timesync
